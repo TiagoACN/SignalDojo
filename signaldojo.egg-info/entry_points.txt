@@ -1,0 +1,2 @@
+[console_scripts]
+signaldojo = app.main:main

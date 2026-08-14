@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signaldojo"
+version = "1.2.6"
+description = "Professional block-based signal processing desktop application"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = {text = "GPL-3.0-or-later"}
+authors = [{name = "Tiago Alvarez Calderon Newton"}]
+maintainers = [{name = "Tiago Alvarez Calderon Newton"}, {name = "SignalDojo Contributors"}]
+classifiers = [
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "PySide6==6.8.2.1",
+  "numpy==2.2.3",
+  "scipy==1.15.1",
+  "pandas==2.2.3",
+  "pyqtgraph==0.13.7",
+  "matplotlib==3.10.0",
+  "openpyxl==3.1.5",
+  "nptdms==1.10.0",
+  "tables==3.10.2",
+]
+
+[project.urls]
+Homepage = "https://signaldojo.org"
+Documentation = "https://signaldojo.org"
+
+[project.scripts]
+signaldojo = "app.main:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

@@ -1,0 +1,206 @@
+{
+  "format": "SignalDojo Project",
+  "project_version": 2,
+  "saved_utc": "2026-07-28T21:28:39.486522+00:00",
+  "application_version": "1.0.0",
+  "project": {
+    "name": "50 Hz Mains Rejection",
+    "description": "Remove narrow-band 50 Hz interference using an IIR notch filter.",
+    "notes": "The spectrum analysers show the 50 Hz component before and after filtering."
+  },
+  "nodes": [
+    {
+      "id": "import_mains",
+      "type": "import_data",
+      "position": [
+        -750,
+        -80
+      ],
+      "parameters": {
+        "file_path": "mains_interference.csv",
+        "delimiter": ",",
+        "header_row": 0,
+        "skip_rows": 0,
+        "sheet_name": "0",
+        "time_column": "time_s",
+        "signal_columns": "sensor_v",
+        "sample_rate": 1000.0,
+        "signal_names": "Measured sensor",
+        "units": "V",
+        "time_mode": "seconds",
+        "decimal": ".",
+        "thousands": "",
+        "missing_policy": "interpolate",
+        "chunk_size": 250000
+      }
+    },
+    {
+      "id": "notch",
+      "type": "notch_filter",
+      "position": [
+        -420,
+        -80
+      ],
+      "parameters": {
+        "frequency": 50.0,
+        "quality_factor": 30.0,
+        "zero_phase": true
+      }
+    },
+    {
+      "id": "scope_mains",
+      "type": "scope",
+      "position": [
+        -40,
+        -150
+      ],
+      "parameters": {
+        "title": "Mains Interference Removal",
+        "max_display_points": 100000,
+        "grid": true,
+        "legend": true,
+        "line_width": 1.4
+      }
+    },
+    {
+      "id": "fft_raw",
+      "type": "fft",
+      "position": [
+        -420,
+        100
+      ],
+      "parameters": {
+        "window": "hann",
+        "detrend": true,
+        "output": "magnitude"
+      }
+    },
+    {
+      "id": "fft_clean",
+      "type": "fft",
+      "position": [
+        -80,
+        100
+      ],
+      "parameters": {
+        "window": "hann",
+        "detrend": true,
+        "output": "magnitude"
+      }
+    },
+    {
+      "id": "spectrum_raw",
+      "type": "spectrum_analyser",
+      "position": [
+        280,
+        20
+      ],
+      "parameters": {
+        "title": "Raw Spectrum",
+        "frequency_scale": "linear",
+        "amplitude_scale": "decibel",
+        "window": "hann"
+      }
+    },
+    {
+      "id": "spectrum_clean",
+      "type": "spectrum_analyser",
+      "position": [
+        280,
+        170
+      ],
+      "parameters": {
+        "title": "Filtered Spectrum",
+        "frequency_scale": "linear",
+        "amplitude_scale": "decibel",
+        "window": "hann"
+      }
+    },
+    {
+      "id": "export_mains",
+      "type": "export_data",
+      "position": [
+        280,
+        -150
+      ],
+      "parameters": {
+        "file_path": "notch_filtered_sensor.csv",
+        "include_metadata": true,
+        "precision": 10,
+        "delimiter": ",",
+        "decimal": ".",
+        "overwrite": "replace"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source_id": "import_mains",
+      "source_port": 0,
+      "target_id": "notch",
+      "target_port": 0
+    },
+    {
+      "source_id": "import_mains",
+      "source_port": 0,
+      "target_id": "scope_mains",
+      "target_port": 0
+    },
+    {
+      "source_id": "notch",
+      "source_port": 0,
+      "target_id": "scope_mains",
+      "target_port": 1
+    },
+    {
+      "source_id": "import_mains",
+      "source_port": 0,
+      "target_id": "fft_raw",
+      "target_port": 0
+    },
+    {
+      "source_id": "notch",
+      "source_port": 0,
+      "target_id": "fft_clean",
+      "target_port": 0
+    },
+    {
+      "source_id": "fft_raw",
+      "source_port": 0,
+      "target_id": "spectrum_raw",
+      "target_port": 1
+    },
+    {
+      "source_id": "fft_clean",
+      "source_port": 0,
+      "target_id": "spectrum_clean",
+      "target_port": 1
+    },
+    {
+      "source_id": "notch",
+      "source_port": 0,
+      "target_id": "export_mains",
+      "target_port": 0
+    }
+  ],
+  "comments": [],
+  "groups": [
+    {
+      "id": "g2",
+      "title": "50 Hz rejection",
+      "position": [
+        -780,
+        -220
+      ],
+      "size": [
+        1100,
+        500
+      ]
+    }
+  ],
+  "view": {
+    "dark_theme": true,
+    "snap_to_grid": true,
+    "auto_execute": false
+  }
+}

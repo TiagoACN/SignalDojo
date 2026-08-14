@@ -1,0 +1,31 @@
+SIGNALDOJO OPEN-SOURCE NOTICE
+
+SignalDojo was created by Tiago Alvarez Calderon Newton and is maintained with
+contributions from the SignalDojo community.
+
+SignalDojo is free and open-source software. It is licensed under the GNU
+General Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+You may run, study, copy, modify and redistribute SignalDojo under the terms
+of that licence. If you distribute modified versions or binaries, you must
+meet the GPL requirements, including providing the corresponding source code
+and licensing covered modifications under the GPL.
+
+SignalDojo is provided WITHOUT ANY WARRANTY, without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+The GPL does not require acceptance merely to receive or run the program. This
+installer page is informational and summarises your rights. The complete GNU
+GPL is installed with SignalDojo as LICENSE and COPYING. Third-party licence
+notices are provided in LICENSES.md. The historical MIT notice for releases
+through 1.2.4 is retained in PREVIOUS_MIT_NOTICE.txt.
+
+The SignalDojo name and logo are addressed separately in TRADEMARK_POLICY.md.
+The trademark policy does not restrict your GPL rights to copy, modify, build
+or redistribute the software; it asks unofficial modified distributions to
+use distinct branding and not imply that they are official SignalDojo builds.
+
+Official SignalDojo installers are the builds published by Tiago Alvarez
+Calderon Newton or the SignalDojo project through the project's designated
+release channels. See CREDITS.md and COPYRIGHT for attribution details.

@@ -1,0 +1,243 @@
+{
+  "format": "SignalDojo Project",
+  "project_version": 2,
+  "saved_utc": "2026-07-28T21:28:39.505076+00:00",
+  "application_version": "1.0.0",
+  "project": {
+    "name": "Motor Current Analysis",
+    "description": "Compare raw and filtered motor current in time and frequency domains.",
+    "notes": "The low-pass filter suppresses broadband noise while retaining commutation ripple."
+  },
+  "nodes": [
+    {
+      "id": "import_motor",
+      "type": "import_data",
+      "position": [
+        -780,
+        -70
+      ],
+      "parameters": {
+        "file_path": "motor_current.csv",
+        "delimiter": ",",
+        "header_row": 0,
+        "skip_rows": 0,
+        "sheet_name": "0",
+        "time_column": "time_s",
+        "signal_columns": "motor_current_a",
+        "sample_rate": 2000.0,
+        "signal_names": "Raw motor current",
+        "units": "A",
+        "time_mode": "seconds",
+        "decimal": ".",
+        "thousands": "",
+        "missing_policy": "interpolate",
+        "chunk_size": 250000
+      }
+    },
+    {
+      "id": "lp_motor",
+      "type": "low_pass",
+      "position": [
+        -470,
+        -90
+      ],
+      "parameters": {
+        "cutoff": 350.0,
+        "lower_cutoff": 5.0,
+        "upper_cutoff": 20.0,
+        "order": 5,
+        "ripple": 1.0,
+        "attenuation": 40.0,
+        "zero_phase": true,
+        "edge_padding": "odd"
+      }
+    },
+    {
+      "id": "scope_motor",
+      "type": "scope",
+      "position": [
+        -120,
+        -170
+      ],
+      "parameters": {
+        "title": "Raw vs Filtered Motor Current",
+        "max_display_points": 100000,
+        "grid": true,
+        "legend": true,
+        "line_width": 1.3
+      }
+    },
+    {
+      "id": "fft_motor_raw",
+      "type": "fft",
+      "position": [
+        -470,
+        100
+      ],
+      "parameters": {
+        "window": "hann",
+        "detrend": true,
+        "output": "magnitude"
+      }
+    },
+    {
+      "id": "fft_motor_filtered",
+      "type": "fft",
+      "position": [
+        -130,
+        100
+      ],
+      "parameters": {
+        "window": "hann",
+        "detrend": true,
+        "output": "magnitude"
+      }
+    },
+    {
+      "id": "spectrum_motor_raw",
+      "type": "spectrum_analyser",
+      "position": [
+        230,
+        30
+      ],
+      "parameters": {
+        "title": "Raw Motor Current FFT",
+        "frequency_scale": "linear",
+        "amplitude_scale": "decibel",
+        "window": "hann"
+      }
+    },
+    {
+      "id": "spectrum_motor_filtered",
+      "type": "spectrum_analyser",
+      "position": [
+        230,
+        180
+      ],
+      "parameters": {
+        "title": "Filtered Motor Current FFT",
+        "frequency_scale": "linear",
+        "amplitude_scale": "decibel",
+        "window": "hann"
+      }
+    },
+    {
+      "id": "stats_motor",
+      "type": "descriptive_statistics",
+      "position": [
+        -120,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "table_motor",
+      "type": "data_table",
+      "position": [
+        230,
+        330
+      ],
+      "parameters": {
+        "maximum_rows": 1000
+      }
+    },
+    {
+      "id": "export_motor",
+      "type": "export_data",
+      "position": [
+        230,
+        -160
+      ],
+      "parameters": {
+        "file_path": "filtered_motor_current.csv",
+        "include_metadata": true,
+        "precision": 10,
+        "delimiter": ",",
+        "decimal": ".",
+        "overwrite": "replace"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source_id": "import_motor",
+      "source_port": 0,
+      "target_id": "lp_motor",
+      "target_port": 0
+    },
+    {
+      "source_id": "import_motor",
+      "source_port": 0,
+      "target_id": "scope_motor",
+      "target_port": 0
+    },
+    {
+      "source_id": "lp_motor",
+      "source_port": 0,
+      "target_id": "scope_motor",
+      "target_port": 1
+    },
+    {
+      "source_id": "import_motor",
+      "source_port": 0,
+      "target_id": "fft_motor_raw",
+      "target_port": 0
+    },
+    {
+      "source_id": "lp_motor",
+      "source_port": 0,
+      "target_id": "fft_motor_filtered",
+      "target_port": 0
+    },
+    {
+      "source_id": "fft_motor_raw",
+      "source_port": 0,
+      "target_id": "spectrum_motor_raw",
+      "target_port": 1
+    },
+    {
+      "source_id": "fft_motor_filtered",
+      "source_port": 0,
+      "target_id": "spectrum_motor_filtered",
+      "target_port": 1
+    },
+    {
+      "source_id": "lp_motor",
+      "source_port": 0,
+      "target_id": "stats_motor",
+      "target_port": 0
+    },
+    {
+      "source_id": "stats_motor",
+      "source_port": 0,
+      "target_id": "table_motor",
+      "target_port": 0
+    },
+    {
+      "source_id": "lp_motor",
+      "source_port": 0,
+      "target_id": "export_motor",
+      "target_port": 0
+    }
+  ],
+  "comments": [],
+  "groups": [
+    {
+      "id": "g3",
+      "title": "Motor current conditioning and analysis",
+      "position": [
+        -820,
+        -240
+      ],
+      "size": [
+        1100,
+        720
+      ]
+    }
+  ],
+  "view": {
+    "dark_theme": true,
+    "snap_to_grid": true,
+    "auto_execute": false
+  }
+}

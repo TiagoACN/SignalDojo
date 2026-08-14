@@ -1,0 +1,182 @@
+{
+  "format": "SignalDojo Project",
+  "project_version": 2,
+  "saved_utc": "2026-07-28T21:28:39.473626+00:00",
+  "application_version": "1.0.0",
+  "project": {
+    "name": "Accelerometer Noise Removal",
+    "description": "Low-pass filtering of noisy accelerometer data with time and frequency inspection.",
+    "notes": "Synthetic data bundled with SignalDojo."
+  },
+  "nodes": [
+    {
+      "id": "import_acc",
+      "type": "import_data",
+      "label": "Raw accelerometer",
+      "position": [
+        -700,
+        -50
+      ],
+      "parameters": {
+        "file_path": "noisy_accelerometer.csv",
+        "delimiter": ",",
+        "header_row": 0,
+        "skip_rows": 0,
+        "sheet_name": "0",
+        "time_column": "time_s",
+        "signal_columns": "accelerometer_g",
+        "sample_rate": 500.0,
+        "signal_names": "Raw accelerometer",
+        "units": "g",
+        "time_mode": "seconds",
+        "decimal": ".",
+        "thousands": "",
+        "missing_policy": "interpolate",
+        "chunk_size": 250000
+      }
+    },
+    {
+      "id": "lp_acc",
+      "type": "low_pass",
+      "position": [
+        -370,
+        -90
+      ],
+      "parameters": {
+        "cutoff": 15.0,
+        "lower_cutoff": 5.0,
+        "upper_cutoff": 20.0,
+        "order": 4,
+        "ripple": 1.0,
+        "attenuation": 40.0,
+        "zero_phase": true,
+        "edge_padding": "odd"
+      }
+    },
+    {
+      "id": "scope_acc",
+      "type": "scope",
+      "position": [
+        0,
+        -150
+      ],
+      "parameters": {
+        "title": "Raw vs Filtered Accelerometer",
+        "max_display_points": 100000,
+        "grid": true,
+        "legend": true,
+        "line_width": 1.5
+      }
+    },
+    {
+      "id": "fft_acc",
+      "type": "fft",
+      "position": [
+        -50,
+        60
+      ],
+      "parameters": {
+        "window": "hann",
+        "detrend": true,
+        "output": "magnitude"
+      }
+    },
+    {
+      "id": "spectrum_acc",
+      "type": "spectrum_analyser",
+      "position": [
+        280,
+        60
+      ],
+      "parameters": {
+        "title": "Filtered Accelerometer Spectrum",
+        "frequency_scale": "linear",
+        "amplitude_scale": "decibel",
+        "window": "hann"
+      }
+    },
+    {
+      "id": "export_acc",
+      "type": "export_data",
+      "position": [
+        280,
+        -160
+      ],
+      "parameters": {
+        "file_path": "filtered_accelerometer.csv",
+        "include_metadata": true,
+        "precision": 10,
+        "delimiter": ",",
+        "decimal": ".",
+        "overwrite": "replace"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source_id": "import_acc",
+      "source_port": 0,
+      "target_id": "lp_acc",
+      "target_port": 0
+    },
+    {
+      "source_id": "import_acc",
+      "source_port": 0,
+      "target_id": "scope_acc",
+      "target_port": 0
+    },
+    {
+      "source_id": "lp_acc",
+      "source_port": 0,
+      "target_id": "scope_acc",
+      "target_port": 1
+    },
+    {
+      "source_id": "lp_acc",
+      "source_port": 0,
+      "target_id": "fft_acc",
+      "target_port": 0
+    },
+    {
+      "source_id": "fft_acc",
+      "source_port": 0,
+      "target_id": "spectrum_acc",
+      "target_port": 1
+    },
+    {
+      "source_id": "lp_acc",
+      "source_port": 0,
+      "target_id": "export_acc",
+      "target_port": 0
+    }
+  ],
+  "comments": [
+    {
+      "id": "c1",
+      "text": "Compare the raw and filtered waveforms, then inspect the filtered FFT.",
+      "position": [
+        -710,
+        -220
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "title": "Accelerometer conditioning",
+      "position": [
+        -750,
+        -260
+      ],
+      "size": [
+        720,
+        430
+      ]
+    }
+  ],
+  "view": {
+    "dark_theme": true,
+    "snap_to_grid": true,
+    "auto_execute": false
+  }
+}

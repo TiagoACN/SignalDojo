@@ -1,0 +1,7 @@
+{
+  "version": "1.2.0",
+  "download_url": "https://signaldojo.org/downloads/SignalDojo-1.2.6-win64-setup.exe",
+  "sha256": "replace-with-lowercase-sha256",
+  "release_notes_url": "https://signaldojo.org/releases/1.2.6",
+  "minimum_supported_version": "1.0.0"
+}
