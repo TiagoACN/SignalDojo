@@ -12,6 +12,26 @@ PRODUCTION_DIRS = (ROOT / "app", ROOT / "installer", ROOT / "build_scripts")
 TEXT_SUFFIXES = {".py", ".ps1", ".iss", ".txt", ".toml", ".spec"}
 UNFINISHED = re.compile(r"\b(TODO|FIXME|HACK|XXX|NOT\s+IMPLEMENTED|PLACEHOLDER)\b", re.IGNORECASE)
 SECRET_FILENAME = re.compile(r"(^|[._-])(secret|private[_-]?key|credentials?|token)([._-]|$)", re.IGNORECASE)
+EXCLUDED_TREE_PARTS = {
+    ".git", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".tox", ".nox",
+    "__pycache__", "build", "dist", "release",
+}
+
+
+def _is_generated_or_environment_path(rel: Path) -> bool:
+    """Return True for generated trees and local Python environments.
+
+    The Windows release build intentionally creates ``.venv-build`` in the
+    repository root.  Production-readiness checks must inspect project-owned
+    source, not third-party packages installed into that build environment.
+    ``.venv*`` also covers developer-created variants such as ``.venv-test``.
+    """
+    return any(
+        part in EXCLUDED_TREE_PARTS
+        or part == "venv"
+        or part.startswith(".venv")
+        for part in rel.parts
+    )
 
 
 def _production_files():
@@ -69,7 +89,7 @@ def test_no_obvious_secret_files_are_tracked_in_source_tree() -> None:
         if not path.is_file() or path.name in allowed:
             continue
         rel = path.relative_to(ROOT)
-        if any(part in {".git", ".venv", "build", "dist", "release"} for part in rel.parts):
+        if _is_generated_or_environment_path(rel):
             continue
         if SECRET_FILENAME.search(path.name):
             suspicious.append(str(rel))

@@ -892,6 +892,8 @@ See:
 - [`LICENSES.md`](LICENSES.md)
 - [`COPYRIGHT`](COPYRIGHT)
 
+Earlier SignalDojo releases through version 1.2.4 were distributed under the MIT licence. The historical notice is preserved in [`PREVIOUS_MIT_NOTICE.txt`](PREVIOUS_MIT_NOTICE.txt).
+
 ## SignalDojo name and logo
 
 The software licence and project branding are separate matters.
